@@ -27,21 +27,31 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      - name: Install dependencies (macOS - full, needs dmg-license)
+        if: runner.os == 'macOS'
+        run: npm install --no-audit --no-fund
+
+      - name: Install dependencies (Windows - skip optional native deps)
+        if: runner.os == 'Windows'
         run: npm install --no-audit --no-fund --omit=optional
 
       - name: Build macOS (dmg + zip, Intel & Apple Silicon)
         if: runner.os == 'macOS'
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
-        run: npx electron-builder --mac --publish never
+        run: |
+          npx electron-builder --mac --publish never || {
+            echo "::warning::failed once - retrying"
+            sleep 15
+            npx electron-builder --mac --publish never
+          }
 
       - name: Build Windows (NSIS installer, auto-retry)
         if: runner.os == 'Windows'
         shell: bash
         run: |
           npx electron-builder --win --publish never || {
-            echo "::warning::electron-builder failed once — retrying"
+            echo "::warning::failed once - retrying"
             sleep 15
             npx electron-builder --win --publish never
           }
@@ -50,11 +60,10 @@ jobs:
         if: failure()
         shell: bash
         run: |
-          echo "=== versions ==="
           node -v
           npx electron-builder --version || true
-          echo "=== release dir ==="
-          ls -la release 2>/dev/null || echo "(release dir not created — see failed step above)"
+          ls node_modules/dmg-license/package.json 2>/dev/null && echo "dmg-license: present" || echo "dmg-license: MISSING"
+          ls -la release 2>/dev/null || echo "(no release dir - see failed build step log)"
 
       - name: Upload macOS artifacts
         if: runner.os == 'macOS'
