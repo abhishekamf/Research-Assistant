@@ -1,0 +1,102 @@
+{
+  "name": "research-ai-assistant",
+  "productName": "Research AI Assistant",
+  "version": "1.0.0",
+  "description": "AI-powered research companion for PhD scholars, faculty and universities - literature mapping, research-gap analysis, citation-aware RAG chat, methodology suggestions, data analysis and reference management.",
+  "main": "electron/main.js",
+  "author": "Abhishek <abhishek.aks@gmail.com> (https://github.com/abhishekamf)",
+  "license": "MIT",
+  "homepage": "https://github.com/abhishekamf/research-ai-assistant#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abhishekamf/research-ai-assistant.git"
+  },
+  "keywords": [
+    "research",
+    "phd",
+    "academia",
+    "rag",
+    "llm",
+    "literature-review",
+    "citations",
+    "bibtex",
+    "electron"
+  ],
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
+  },
+  "dependencies": {
+    "mammoth": "^1.12.2",
+    "pdfjs-dist": "^3.11.174",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.abhishek.researchai",
+    "productName": "Research AI Assistant",
+    "copyright": "Copyright (c) 2026 Abhishek",
+    "directories": {
+      "output": "release",
+      "buildResources": "resources"
+    },
+    "files": [
+      "electron/**/*",
+      "server/**/*",
+      "src/**/*",
+      "resources/icon.png",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "resources/icon.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "icon": "resources/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "linux": {
+      "icon": "resources/icon.png",
+      "category": "Science",
+      "target": [
+        "AppImage"
+      ]
+    }
+  }
+}

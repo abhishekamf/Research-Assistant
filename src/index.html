@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+  <title>Research AI Assistant</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Left navigation rail -->
+    <nav id="rail">
+      <div class="rail-logo" title="Research AI Assistant">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/>
+          <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>
+          <circle cx="12" cy="10" r="2.2"/>
+          <path d="M12 7.8V5.6M12 12.2v2.2M9.8 10H7.6M16.4 10h-2.2"/>
+        </svg>
+      </div>
+      <button class="rail-btn" data-view="library" title="Library — papers, thesis, datasets">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Library</span>
+      </button>
+      <button class="rail-btn" data-view="chat" title="Chat with your library (RAG)">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Chat</span>
+      </button>
+      <button class="rail-btn" data-view="discover" title="Discover — academic search">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span>Discover</span>
+      </button>
+      <button class="rail-btn" data-view="references" title="References — citation management">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h7"/></svg>
+        <span>Refs</span>
+      </button>
+      <button class="rail-btn" data-view="workflows" title="Research Workbench — gaps, map, methodology, manuscript">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v4M12 18v4M4.9 4.9l2.9 2.9M16.2 16.2l2.9 2.9M2 12h4M18 12h4M4.9 19.1l2.9-2.9M16.2 7.8l2.9-2.9"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Workbench</span>
+      </button>
+      <button class="rail-btn" data-view="data" title="Data Lab — dataset & questionnaire analysis">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18"/><path d="m7 15 4-6 3 4 5-8"/></svg>
+        <span>Data Lab</span>
+      </button>
+      <div class="rail-spacer"></div>
+      <button class="rail-btn" data-view="settings" title="Settings">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <!-- Main column -->
+    <div id="main">
+      <header id="topbar">
+        <div id="project-zone">
+          <select id="project-select" title="Active project"></select>
+          <button id="btn-new-project" class="btn btn-ghost" title="New project">＋ New</button>
+          <button id="btn-edit-project" class="btn btn-ghost" title="Rename / research question">✎ Edit</button>
+          <button id="btn-del-project" class="btn btn-ghost danger" title="Delete project">🗑</button>
+        </div>
+        <div id="top-status"></div>
+      </header>
+
+      <main id="views">
+        <section id="view-library" class="view"></section>
+        <section id="view-chat" class="view"></section>
+        <section id="view-discover" class="view"></section>
+        <section id="view-references" class="view"></section>
+        <section id="view-workflows" class="view"></section>
+        <section id="view-data" class="view"></section>
+        <section id="view-settings" class="view"></section>
+      </main>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+  <div id="modal-root"></div>
+  <div id="drop-overlay"><div class="drop-box">Drop your papers, thesis chapters, datasets or .bib files here</div></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/views/library.js"></script>
+  <script src="js/views/chat.js"></script>
+  <script src="js/views/discover.js"></script>
+  <script src="js/views/references.js"></script>
+  <script src="js/views/workflows.js"></script>
+  <script src="js/views/data.js"></script>
+  <script src="js/views/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
