@@ -11,13 +11,13 @@
 #
 # USAGE (edit REPO_URL below first, then run:)
 #   chmod +x scripts/push-to-github.sh
-#   ./scripts/push-to-github.sh https://github.com/abhishekamf/research-ai-assistant.git
+#   ./scripts/push-to-github.sh https://github.com/abhishekamf/Research-Assistant.git
 # ============================================================================
 
 set -euo pipefail
 
 # ---- EDIT THIS if not passing the URL as an argument ------------------------
-DEFAULT_REPO="https://github.com/abhishekamf/research-ai-assistant.git"
+DEFAULT_REPO="https://github.com/abhishekamf/Research-Assistant.git"
 REPO_URL="${1:-$DEFAULT_REPO}"
 # -----------------------------------------------------------------------------
 

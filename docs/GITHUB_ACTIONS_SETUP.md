@@ -56,16 +56,16 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund --omit=optional
 
       - name: Build macOS (dmg + zip, Intel & Apple Silicon)
         if: runner.os == 'macOS'
@@ -73,13 +73,29 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: false   # unsigned build — avoids CI keychain errors
         run: npx electron-builder --mac --publish never
 
-      - name: Build Windows (NSIS installer)
+      - name: Build Windows (NSIS installer, auto-retry for transient download failures)
         if: runner.os == 'Windows'
-        run: npx electron-builder --win --publish never
+        shell: bash
+        run: |
+          npx electron-builder --win --publish never || {
+            echo "::warning::electron-builder failed once — retrying (NSIS/winCodeSign download flakes are common on Windows runners)"
+            sleep 15
+            npx electron-builder --win --publish never
+          }
+
+      - name: Diagnostics (only on failure)
+        if: failure()
+        shell: bash
+        run: |
+          echo "=== node & electron-builder versions ==="
+          node -v
+          npx electron-builder --version || true
+          echo "=== release directory ==="
+          ls -la release 2>/dev/null || echo "(release dir not created — build failed early; read the log of the failed step above)"
 
       - name: Upload macOS artifacts
         if: runner.os == 'macOS'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-distributables
           path: |
@@ -89,7 +105,7 @@ jobs:
 
       - name: Upload Windows artifacts
         if: runner.os == 'Windows'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-installer
           path: release/*.exe
@@ -103,17 +119,18 @@ jobs:
       contents: write
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: artifacts
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
           files: |
             artifacts/macos-distributables/*
             artifacts/windows-installer/*
+
 ```
 
 </details>

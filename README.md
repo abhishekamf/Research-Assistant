@@ -76,7 +76,7 @@ Local-first: everything (documents, embeddings, chats, settings) stays on your m
 
 ```bash
 # 1. clone
-git clone https://github.com/abhishekamf/research-ai-assistant.git
+git clone https://github.com/abhishekamf/Research-Assistant.git
 cd research-ai-assistant
 
 # 2. install

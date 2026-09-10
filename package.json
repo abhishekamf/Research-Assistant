@@ -6,10 +6,10 @@
   "main": "electron/main.js",
   "author": "Abhishek <abhishek.aks@gmail.com> (https://github.com/abhishekamf)",
   "license": "MIT",
-  "homepage": "https://github.com/abhishekamf/research-ai-assistant#readme",
+  "homepage": "https://github.com/abhishekamf/Research-Assistant#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/abhishekamf/research-ai-assistant.git"
+    "url": "https://github.com/abhishekamf/Research-Assistant.git"
   },
   "keywords": [
     "research",
@@ -52,6 +52,7 @@
       "server/**/*",
       "src/**/*",
       "resources/icon.png",
+      "resources/icon.ico",
       "package.json"
     ],
     "mac": {
@@ -75,7 +76,7 @@
       ]
     },
     "win": {
-      "icon": "resources/icon.png",
+      "icon": "resources/icon.ico",
       "target": [
         {
           "target": "nsis",
