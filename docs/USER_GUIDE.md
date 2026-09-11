@@ -88,6 +88,7 @@ Everything lives locally:
 | Answers cite little/nothing | Index still running (watch top bar), or add more papers, or raise Settings temperature ↑ quality of model |
 | Embedding model mismatch after switching providers | Library → **Re-index embeddings** |
 | PDF has no text | It's a scanned image — OCR isn't built in yet; run OCR externally first |
+| macOS says the app is **"damaged"** | This is Gatekeeper blocking an unsigned app, not real corruption. Fix in Terminal: `xattr -cr "/Applications/Research AI Assistant.app"` then open normally. (Or: System Settings → Privacy & Security → *Open Anyway*) |
 | Windows SmartScreen warning on installer | Click *More info → Run anyway* (unsigned build) |
 
 ## 10. Privacy & academic integrity

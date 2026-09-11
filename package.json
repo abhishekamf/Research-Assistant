@@ -98,6 +98,7 @@
       "target": [
         "AppImage"
       ]
-    }
+    },
+    "afterSign": "scripts/afterSign.js"
   }
 }

@@ -64,21 +64,37 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      # macOS: FULL install — electron-builder requires the optional dep
+      # 'dmg-license' at startup on macOS; --omit=optional breaks it instantly.
+      # (canvas, the other optional dep, installs fine/silently-skips on macOS)
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: npm install --no-audit --no-fund
+
+      # Windows: skip optional native deps — 'canvas' has no prebuilt binary
+      # for Node 22 and would try to compile (fails). dmg-license is not
+      # needed for the Windows target.
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
         run: npm install --no-audit --no-fund --omit=optional
 
       - name: Build macOS (dmg + zip, Intel & Apple Silicon)
         if: runner.os == 'macOS'
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false   # unsigned build — avoids CI keychain errors
-        run: npx electron-builder --mac --publish never
+        run: |
+          npx electron-builder --mac --publish never || {
+            echo "::warning::electron-builder failed once — retrying (electron/dmg downloads can flake)"
+            sleep 15
+            npx electron-builder --mac --publish never
+          }
 
-      - name: Build Windows (NSIS installer, auto-retry for transient download failures)
+      - name: Build Windows (NSIS installer, auto-retry)
         if: runner.os == 'Windows'
         shell: bash
         run: |
           npx electron-builder --win --publish never || {
-            echo "::warning::electron-builder failed once — retrying (NSIS/winCodeSign download flakes are common on Windows runners)"
+            echo "::warning::electron-builder failed once — retrying (NSIS/winCodeSign download flakes are common)"
             sleep 15
             npx electron-builder --win --publish never
           }
@@ -87,11 +103,13 @@ jobs:
         if: failure()
         shell: bash
         run: |
-          echo "=== node & electron-builder versions ==="
+          echo "=== versions ==="
           node -v
           npx electron-builder --version || true
-          echo "=== release directory ==="
-          ls -la release 2>/dev/null || echo "(release dir not created — build failed early; read the log of the failed step above)"
+          echo "=== dmg-license present? (needed on macOS) ==="
+          ls node_modules/dmg-license/package.json 2>/dev/null && echo "dmg-license: present" || echo "dmg-license: MISSING"
+          echo "=== release dir ==="
+          ls -la release 2>/dev/null || echo "(release dir not created — see the failed build step's log above)"
 
       - name: Upload macOS artifacts
         if: runner.os == 'macOS'
@@ -176,6 +194,7 @@ jobs:
 | Actions tab exists but no run triggered | You pushed to a branch other than `main`/`master` → the workflow also has a *Run workflow* button, or push to `main` |
 | macOS job fails at code signing | Already handled: `CSC_IDENTITY_AUTO_DISCOVERY: false` (unsigned build). Users right-click → Open on first launch |
 | Windows SmartScreen warning | Normal for unsigned installers → *More info* → *Run anyway* |
+| macOS **"app is damaged"** after install | Unsigned app + Gatekeeper. CI builds are ad-hoc signed (see `scripts/afterSign.js`), so users get the *Open Anyway* dialog; if "damaged" still appears: `xattr -cr "/Applications/Research AI Assistant.app"`. Permanent fix: Apple Developer ID + notarization (set `CSC_LINK` / `APPLE_ID` secrets) |
 | Release job did nothing | It only runs on `v*` tags → `git tag v1.0.0 && git push origin v1.0.0` |
 | Artifacts section missing | Job failed → open the job log; the most common cause is an npm install error (check Node version) |
 
