@@ -86,6 +86,13 @@ npm install
 npm start
 ```
 
+**Don't want the Gatekeeper warning? Install via one Terminal command**
+(downloads with `curl` are *not* quarantined by macOS, so the app opens cleanly):
+```bash
+curl -fsSL https://raw.githubusercontent.com/abhishekamf/Research-Assistant/main/scripts/install-macos.sh | bash
+```
+*(requires a published Release — `git tag v1.0.0 && git push origin v1.0.0`)*
+
 **Recommended (fully local & free):**
 ```bash
 # install Ollama, then in another terminal:
